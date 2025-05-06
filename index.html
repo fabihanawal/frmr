@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>কৃষি নেটওয়ার্ক - Farmer Network</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Hind Siliguri', sans-serif;
+            background-color: #f7fafc;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-container {
+            height: 400px;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .animated-input:focus {
+            box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.3);
+        }
+        
+        .language-switcher {
+            transition: all 0.3s ease;
+        }
+        
+        .language-switcher:hover {
+            transform: scale(1.05);
+        }
+        
+        .dashboard-card {
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Language Switcher -->
+    <div class="fixed top-4 right-4 z-50">
+        <div class="language-switcher bg-white rounded-full shadow-md p-2 cursor-pointer">
+            <span class="text-green-600 font-medium">EN</span> | <span class="text-gray-600">বাংলা</span>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-leaf text-2xl"></i>
+                    <span class="text-xl font-bold">কৃষি নেটওয়ার্ক</span>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#home" class="hover:text-green-100 transition">হোম</a>
+                    <a href="#farmers" class="hover:text-green-100 transition">কৃষকদের তথ্য</a>
+                    <a href="#products" class="hover:text-green-100 transition">পণ্য সমূহ</a>
+                    <a href="#market" class="hover:text-green-100 transition">বাজার মূল্য</a>
+                    <a href="#resources" class="hover:text-green-100 transition">সম্পদ</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="bg-white text-green-600 px-4 py-1 rounded-full font-medium hover:bg-green-50 transition">
+                        লগইন
+                    </button>
+                    <button class="md:hidden text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg text-white py-16 md:py-24">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-4">
+                        আপনার এলাকার কৃষকদের সাথে সংযুক্ত হোন
+                    </h1>
+                    <p class="text-xl mb-8 opacity-90">
+                        স্থানীয় কৃষি পণ্যের একটি বিস্তৃত ডাটাবেস এবং সরাসরি বাজার মূল্য তথ্য অ্যাক্সেস করুন।
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+                        <button class="bg-white text-green-600 px-6 py-3 rounded-full font-bold hover:bg-green-50 transition">
+                            এখনই রেজিস্টার করুন
+                        </button>
+                        <button class="border-2 border-white px-6 py-3 rounded-full font-bold hover:bg-white hover:text-green-600 transition">
+                            আরও জানুন
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 flex justify-center">
+                    <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                         alt="Farmers working" class="rounded-lg shadow-xl w-full max-w-md">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="bg-white py-8 -mt-8">
+        <div class="container mx-auto px-4">
+            <div class="bg-white rounded-xl shadow-lg p-6 max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">কৃষি পণ্য অনুসন্ধান করুন</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-gray-700 mb-2">পণ্যের নাম</label>
+                        <input type="text" placeholder="যেমন: ধান, আলু, পেঁয়াজ" 
+                               class="animated-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 mb-2">অবস্থান</label>
+                        <select class="animated-input w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none">
+                            <option>সকল এলাকা</option>
+                            <option>ঢাকা</option>
+                            <option>চট্টগ্রাম</option>
+                            <option>রাজশাহী</option>
+                            <option>খুলনা</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button class="gradient-bg text-white px-6 py-3 rounded-lg w-full hover:bg-green-600 transition">
+                            <i class="fas fa-search mr-2"></i> অনুসন্ধান
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Farmers Section -->
+    <section id="farmers" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">আমাদের কৃষকদের সাথে পরিচিত হোন</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    আপনার এলাকার অভিজ্ঞ এবং নতুন কৃষকদের সাথে সংযুক্ত হোন এবং তাদের কৃষি পদ্ধতি সম্পর্কে জানুন।
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Farmer Card 1 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1586773860418-d37222d8fce3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Farmer" class="w-full h-48 object-cover">
+                        <div class="absolute bottom-0 left-0 bg-green-600 text-white px-3 py-1 text-sm font-medium">
+                            ধান চাষী
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">আব্দুল করিম</h3>
+                        <p class="text-gray-600 mb-2">বগুড়া, রাজশাহী</p>
+                        <div class="flex items-center text-yellow-400 mb-4">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="text-gray-600 ml-2">4.5</span>
+                        </div>
+                        <p class="text-gray-700 mb-4">
+                            ১৫ বছরের অভিজ্ঞতা সম্পন্ন ধান চাষী। জৈব কৃষি পদ্ধতিতে বিশেষজ্ঞ।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            প্রোফাইল দেখুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Farmer Card 2 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1560493676-04071cc5c5ec?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Farmer" class="w-full h-48 object-cover">
+                        <div class="absolute bottom-0 left-0 bg-blue-600 text-white px-3 py-1 text-sm font-medium">
+                            সবজি চাষী
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">রেহানা বেগম</h3>
+                        <p class="text-gray-600 mb-2">কুমিল্লা, চট্টগ্রাম</p>
+                        <div class="flex items-center text-yellow-400 mb-4">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span class="text-gray-600 ml-2">4.0</span>
+                        </div>
+                        <p class="text-gray-700 mb-4">
+                            নারী উদ্যোক্তা যিনি জৈব সবজি চাষে বিশেষজ্ঞ। স্থানীয় বাজারে সরবরাহ করেন।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            প্রোফাইল দেখুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Farmer Card 3 -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1564569914211-4de365f002d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Farmer" class="w-full h-48 object-cover">
+                        <div class="absolute bottom-0 left-0 bg-purple-600 text-white px-3 py-1 text-sm font-medium">
+                            ফল চাষী
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">মোঃ রফিকুল ইসলাম</h3>
+                        <p class="text-gray-600 mb-2">ঝিনাইদহ, খুলনা</p>
+                        <div class="flex items-center text-yellow-400 mb-4">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="text-gray-600 ml-2">5.0</span>
+                        </div>
+                        <p class="text-gray-700 mb-4">
+                            আম ও লিচু বাগানের মালিক। আধুনিক ফল চাষ পদ্ধতিতে প্রশিক্ষণ প্রদান করেন।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            প্রোফাইল দেখুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="border-2 border-green-600 text-green-600 px-6 py-3 rounded-full font-bold hover:bg-green-600 hover:text-white transition">
+                    সকল কৃষক দেখুন <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section id="products" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">কৃষি পণ্য সমূহ</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    আপনার এলাকার কৃষকদের দ্বারা উৎপাদিত সর্বশেষ কৃষি পণ্য সম্পর্কে জানুন।
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Product Card 1 -->
+                <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1586201375761-83865001e1ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Rice" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            নতুন
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg text-gray-800 mb-1">ব্রি ধান-৮৯</h3>
+                        <p class="text-gray-600 text-sm mb-2">আব্দুল করিম, বগুড়া</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-600">৳ ৪৫ প্রতি কেজি</span>
+                            <span class="text-gray-500 text-sm">স্টক: ৫০০ কেজি</span>
+                        </div>
+                        <button class="w-full mt-3 bg-green-100 text-green-600 py-2 rounded-lg font-medium hover:bg-green-200 transition">
+                            <i class="fas fa-shopping-cart mr-2"></i> অর্ডার করুন
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1566842600171-0f2eba3e1265?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Potato" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg text-gray-800 mb-1">জৈব আলু</h3>
+                        <p class="text-gray-600 text-sm mb-2">রেহানা বেগম, কুমিল্লা</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-600">৳ ৩০ প্রতি কেজি</span>
+                            <span class="text-gray-500 text-sm">স্টক: ২০০ কেজি</span>
+                        </div>
+                        <button class="w-full mt-3 bg-green-100 text-green-600 py-2 rounded-lg font-medium hover:bg-green-200 transition">
+                            <i class="fas fa-shopping-cart mr-2"></i> অর্ডার করুন
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Mango" class="w-full h-48 object-cover">
+                        <div class="absolute top-2 right-2 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            জনপ্রিয়
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg text-gray-800 mb-1">হিমসাগর আম</h3>
+                        <p class="text-gray-600 text-sm mb-2">মোঃ রফিকুল, ঝিনাইদহ</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-600">৳ ৮০ প্রতি কেজি</span>
+                            <span class="text-gray-500 text-sm">স্টক: ১৫০ কেজি</span>
+                        </div>
+                        <button class="w-full mt-3 bg-green-100 text-green-600 py-2 rounded-lg font-medium hover:bg-green-200 transition">
+                            <i class="fas fa-shopping-cart mr-2"></i> অর্ডার করুন
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="product-card bg-white rounded-lg shadow-md overflow-hidden transition duration-300">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                             alt="Onion" class="w-full h-48 object-cover">
+                    </div>
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg text-gray-800 mb-1">স্থানীয় পেঁয়াজ</h3>
+                        <p class="text-gray-600 text-sm mb-2">আব্দুল মালেক, পাবনা</p>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-green-600">৳ ৫৫ প্রতি কেজি</span>
+                            <span class="text-gray-500 text-sm">স্টক: ৩০০ কেজি</span>
+                        </div>
+                        <button class="w-full mt-3 bg-green-100 text-green-600 py-2 rounded-lg font-medium hover:bg-green-200 transition">
+                            <i class="fas fa-shopping-cart mr-2"></i> অর্ডার করুন
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <button class="border-2 border-green-600 text-green-600 px-6 py-3 rounded-full font-bold hover:bg-green-600 hover:text-white transition">
+                    আরও পণ্য দেখুন <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Market Prices Section -->
+    <section id="market" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">বর্তমান বাজার মূল্য</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    সর্বশেষ বাজার মূল্য এবং মূল্য প্রবণতা সম্পর্কে আপডেট থাকুন।
+                </p>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    পণ্যের নাম
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    গড় মূল্য (প্রতি কেজি)
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    মূল্য পরিবর্তন
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    সর্বোচ্চ মূল্য
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
+                                    সর্বনিম্ন মূল্য
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1586201375761-83865001e1ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">ধান</div>
+                                            <div class="text-sm text-gray-500">ব্রি ধান-২৮</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">৳ ৪২</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        + ২.৫%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৪৫
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৪০
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1566842600171-0f2eba3e1265?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">আলু</div>
+                                            <div class="text-sm text-gray-500">ডায়মন্ড জাত</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">৳ ২৮</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        - ১.২%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৩০
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ২৫
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">পেঁয়াজ</div>
+                                            <div class="text-sm text-gray-500">স্থানীয় জাত</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">৳ ৫০</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        + ৫.৭%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৫৫
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৪৮
+                                </td>
+                            </tr>
+                            
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1589927986089-35812388d1f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">আম</div>
+                                            <div class="text-sm text-gray-500">হিমসাগর</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="text-sm text-gray-900">৳ ৭৫</div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        + ১০.৩%
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৮০
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    ৳ ৭০
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">মূল্য প্রবণতা: ধান</h3>
+                    <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
+                        <p class="text-gray-500">মূল্য চার্ট এখানে প্রদর্শিত হবে</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">মূল্য প্রবণতা: আলু</h3>
+                    <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
+                        <p class="text-gray-500">মূল্য চার্ট এখানে প্রদর্শিত হবে</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section id="resources" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">কৃষি সম্পদ ও তথ্য</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    আধুনিক কৃষি পদ্ধতি, প্রশিক্ষণ এবং সরকারি সুযোগ-সুবিধা সম্পর্কে জানুন।
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Resource Card 1 -->
+                <div class="dashboard-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full text-green-600 mb-4">
+                            <i class="fas fa-book text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">কৃষি গাইড</h3>
+                        <p class="text-gray-600 mb-4">
+                            বিভিন্ন ফসলের চাষ পদ্ধতি, রোগ ব্যবস্থাপনা এবং আধুনিক কৃষি প্রযুক্তি সম্পর্কে বিস্তারিত জানুন।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            পড়ুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Resource Card 2 -->
+                <div class="dashboard-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full text-blue-600 mb-4">
+                            <i class="fas fa-video text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">প্রশিক্ষণ ভিডিও</h3>
+                        <p class="text-gray-600 mb-4">
+                            বিশেষজ্ঞদের দ্বারা তৈরি কৃষি প্রশিক্ষণ ভিডিও দেখুন এবং ব্যবহারিক জ্ঞান অর্জন করুন।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            দেখুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Resource Card 3 -->
+                <div class="dashboard-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+                    <div class="p-6">
+                        <div class="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full text-purple-600 mb-4">
+                            <i class="fas fa-hand-holding-usd text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800 mb-2">সরকারি সুবিধা</h3>
+                        <p class="text-gray-600 mb-4">
+                            কৃষকদের জন্য সরকারি ভর্তুকি, ঋণ এবং অন্যান্য সহায়তা কর্মসূচি সম্পর্কে জানুন।
+                        </p>
+                        <button class="text-green-600 font-medium hover:text-green-700 transition">
+                            আবেদন করুন <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-2">আমাদের কৃষকদের অবস্থান</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    আপনার নিকটবর্তী কৃষক এবং কৃষি পণ্যের সরবরাহকারীদের অবস্থান দেখুন।
+                </p>
+            </div>
+            
+            <div class="map-container bg-gray-200">
+                <!-- This would be replaced with an actual map implementation like Google Maps or Leaflet -->
+                <div class="h-full w-full flex items-center justify-center">
+                    <div class="text-center">
+                        <i class="fas fa-map-marked-alt text-5xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-600">ইন্টারএক্টিভ মানচিত্র এখানে প্রদর্শিত হবে</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="py-16 gradient-bg text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold mb-4">আমাদের নিউজলেটারে সাবস্ক্রাইব করুন</h2>
+                <p class="text-xl mb-8 opacity-90">
+                    সর্বশেষ কৃষি সংবাদ, বাজার মূল্য আপডেট এবং বিশেষ অফার সম্পর্কে জানতে আজই সাবস্ক্রাইব করুন।
+                </p>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="email" placeholder="আপনার ইমেইল ঠিকানা" 
+                           class="flex-grow px-4 py-3 rounded-lg focus:outline-none text-gray-800">
+                    <button class="bg-white text-green-600 px-6 py-3 rounded-lg font-bold hover:bg-green-50 transition whitespace-nowrap">
+                        সাবস্ক্রাইব করুন
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center">
+                        <i class="fas fa-leaf mr-2"></i> কৃষি নেটওয়ার্ক
+                    </h3>
+                    <p class="text-gray-400">
+                        বাংলাদেশের কৃষকদের সাথে ক্রেতাদের সংযুক্ত করার একটি প্ল্যাটফর্ম।
+                    </p>
+                    <div class="flex space-x-4 mt-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <i class="fab fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">লিংকসমূহ</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">হোম</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">কৃষকদের তথ্য</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">পণ্য সমূহ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">বাজার মূল্য</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">সম্পদ</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">সেবাসমূহ</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">কৃষি পরামর্শ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">বাজার সংযোগ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">প্রশিক্ষণ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">মূল্য বিশ্লেষণ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">সরকারি সুবিধা</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-bold mb-4">যোগাযোগ</h3>
+                    <ul class="space-y-2">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">১২৩ কৃষি সেন্টার, ফার্মগেট, ঢাকা</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone-alt mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">+৮৮০ ১২৩৪ ৫৬৭৮৯</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-2 text-gray-400"></i>
+                            <span class="text-gray-400">info@krishinetwork.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">
+                    &copy; ২০২৩ কৃষি নেটওয়ার্ক। সর্বস্বত্ব সংরক্ষিত।
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">গোপনীয়তা নীতি</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">ব্যবহারের শর্তাবলী</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">সাহায্য</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu (hidden by default) -->
+    <div class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden" id="mobileMenu">
+        <div class="absolute top-0 right-0 p-4">
+            <button class="text-white text-3xl" id="closeMenu">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="flex flex-col items-center justify-center h-full space-y-8">
+            <a href="#home" class="text-white text-2xl">হোম</a>
+            <a href="#farmers" class="text-white text-2xl">কৃষকদের তথ্য</a>
+            <a href="#products" class="text-white text-2xl">পণ্য সমূহ</a>
+            <a href="#market" class="text-white text-2xl">বাজার মূল্য</a>
+            <a href="#resources" class="text-white text-2xl">সম্পদ</a>
+            <button class="bg-white text-green-600 px-8 py-3 rounded-full font-bold text-xl">
+                লগইন
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.md\\:hidden button').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeMenu').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+        
+        // Language switcher toggle
+        document.querySelector('.language-switcher').addEventListener('click', function() {
+            const enText = this.querySelector('span:first-child');
+            const bnText = this.querySelector('span:last-child');
+            
+            if (enText.classList.contains('text-green-600')) {
+                enText.classList.remove('text-green-600');
+                enText.classList.add('text-gray-600');
+                bnText.classList.remove('text-gray-600');
+                bnText.classList.add('text-green-600');
+            } else {
+                enText.classList.add('text-green-600');
+                enText.classList.remove('text-gray-600');
+                bnText.classList.add('text-gray-600');
+                bnText.classList.remove('text-green-600');
+            }
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+                
+                // Close mobile menu if open
+                document.getElementById('mobileMenu').classList.add('hidden');
+            });
+        });
+        
+        // Simple product search functionality
+        document.querySelector('#home button.bg-white').addEventListener('click', function() {
+            alert('রেজিস্ট্রেশন পেজ লোড হচ্ছে...');
+        });
+        
+        // Product order buttons
+        document.querySelectorAll('.product-card button').forEach(button => {
+            button.addEventListener('click', function() {
+                const productName = this.closest('.product-card').querySelector('h3').textContent;
+                alert(`আপনি ${productName} অর্ডার করতে চান। লগইন করুন বা রেজিস্টার করুন।`);
+            });
+        });
+    </script>
+</body>
+</html>
