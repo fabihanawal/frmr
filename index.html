@@ -6,6 +6,8 @@
     <title>কৃষি নেটওয়ার্ক - Farmer Network</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&libraries=&v=weekly" async></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap');
         
@@ -48,6 +50,46 @@
         .dashboard-card:hover {
             transform: translateY(-3px);
         }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            animation: modalopen 0.5s;
+        }
+        
+        @keyframes modalopen {
+            from {opacity: 0; transform: translateY(-50px)}
+            to {opacity: 1; transform: translateY(0)}
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover {
+            color: black;
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -77,7 +119,7 @@
                     <button class="bg-white text-green-600 px-4 py-1 rounded-full font-medium hover:bg-green-50 transition">
                         লগইন
                     </button>
-                    <button class="md:hidden text-white">
+                    <button class="md:hidden text-white" id="mobileMenuButton">
                         <i class="fas fa-bars text-xl"></i>
                     </button>
                 </div>
@@ -97,7 +139,7 @@
                         স্থানীয় কৃষি পণ্যের একটি বিস্তৃত ডাটাবেস এবং সরাসরি বাজার মূল্য তথ্য অ্যাক্সেস করুন।
                     </p>
                     <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
-                        <button class="bg-white text-green-600 px-6 py-3 rounded-full font-bold hover:bg-green-50 transition">
+                        <button id="registerBtn" class="bg-white text-green-600 px-6 py-3 rounded-full font-bold hover:bg-green-50 transition">
                             এখনই রেজিস্টার করুন
                         </button>
                         <button class="border-2 border-white px-6 py-3 rounded-full font-bold hover:bg-white hover:text-green-600 transition">
@@ -106,8 +148,8 @@
                     </div>
                 </div>
                 <div class="md:w-1/2 flex justify-center">
-                    <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
-                         alt="Farmers working" class="rounded-lg shadow-xl w-full max-w-md">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" 
+                         alt="Bangladeshi farmers working in field" class="rounded-lg shadow-xl w-full max-w-md">
                 </div>
             </div>
         </div>
@@ -505,15 +547,11 @@
             <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">মূল্য প্রবণতা: ধান</h3>
-                    <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
-                        <p class="text-gray-500">মূল্য চার্ট এখানে প্রদর্শিত হবে</p>
-                    </div>
+                    <canvas id="riceChart" height="250"></canvas>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">মূল্য প্রবণতা: আলু</h3>
-                    <div class="h-64 bg-gray-100 rounded flex items-center justify-center">
-                        <p class="text-gray-500">মূল্য চার্ট এখানে প্রদর্শিত হবে</p>
-                    </div>
+                    <canvas id="potatoChart" height="250"></canvas>
                 </div>
             </div>
         </div>
@@ -591,14 +629,8 @@
                 </p>
             </div>
             
-            <div class="map-container bg-gray-200">
-                <!-- This would be replaced with an actual map implementation like Google Maps or Leaflet -->
-                <div class="h-full w-full flex items-center justify-center">
-                    <div class="text-center">
-                        <i class="fas fa-map-marked-alt text-5xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-600">ইন্টারএক্টিভ মানচিত্র এখানে প্রদর্শিত হবে</p>
-                    </div>
-                </div>
+            <div class="map-container bg-gray-200" id="farmersMap">
+                <!-- Google Map will be loaded here -->
             </div>
         </div>
     </section>
@@ -692,7 +724,7 @@
             
             <div class="border-t border-gray-700 pt-6 flex flex-col md:flex-row justify-between items-center">
                 <p class="text-gray-400 text-sm mb-4 md:mb-0">
-                    &copy; ২০২৩ কৃষি নেটওয়ার্ক। সর্বস্বত্ব সংরক্ষিত।
+                    &copy; ২০২৫ কৃষি নেটওয়ার্ক। আর.এস.টি.এস বিডি কর্তৃক সর্বস্বত্ব সংরক্ষিত।
                 </p>
                 <div class="flex space-x-6">
                     <a href="#" class="text-gray-400 hover:text-white text-sm transition">গোপনীয়তা নীতি</a>
@@ -702,6 +734,53 @@
             </div>
         </div>
     </footer>
+
+    <!-- Registration Modal -->
+    <div id="registrationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">রেজিস্ট্রেশন ফর্ম</h2>
+            <form id="registrationForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="name">পূর্ণ নাম</label>
+                    <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="phone">মোবাইল নম্বর</label>
+                    <input type="tel" id="phone" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="email">ইমেইল ঠিকানা</label>
+                    <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="location">অবস্থান</label>
+                    <select id="location" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="">-- নির্বাচন করুন --</option>
+                        <option value="dhaka">ঢাকা</option>
+                        <option value="chittagong">চট্টগ্রাম</option>
+                        <option value="rajshahi">রাজশাহী</option>
+                        <option value="khulna">খুলনা</option>
+                        <option value="barisal">বরিশাল</option>
+                        <option value="sylhet">সিলেট</option>
+                        <option value="rangpur">রংপুর</option>
+                        <option value="mymensingh">ময়মনসিংহ</option>
+                    </select>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2" for="userType">আপনি কে?</label>
+                    <select id="userType" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <option value="farmer">কৃষক</option>
+                        <option value="buyer">ক্রেতা</option>
+                        <option value="both">উভয়</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg font-bold hover:bg-green-700 transition">
+                    রেজিস্টার করুন
+                </button>
+            </form>
+        </div>
+    </div>
 
     <!-- Mobile Menu (hidden by default) -->
     <div class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden" id="mobileMenu">
@@ -723,8 +802,120 @@
     </div>
 
     <script>
+        // Initialize Google Map
+        function initMap() {
+            const bangladesh = { lat: 23.6850, lng: 90.3563 };
+            const map = new google.maps.Map(document.getElementById("farmersMap"), {
+                zoom: 7,
+                center: bangladesh,
+            });
+            
+            // Add some marker locations (sample data)
+            const locations = [
+                { lat: 23.7915, lng: 90.3883, title: "ধান চাষী - আব্দুল করিম" },
+                { lat: 23.4607, lng: 91.1809, title: "সবজি চাষী - রেহানা বেগম" },
+                { lat: 23.1793, lng: 89.1466, title: "আম চাষী - মোঃ রফিকুল" },
+                { lat: 24.3740, lng: 88.6011, title: "ধান চাষী - আব্দুল মালেক" },
+                { lat: 22.8456, lng: 89.5403, title: "পেঁয়াজ চাষী - করিমুল হক" }
+            ];
+            
+            locations.forEach(location => {
+                new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: location.title
+                });
+            });
+        }
+        
+        // Initialize Rice Price Chart
+        const riceCtx = document.getElementById('riceChart').getContext('2d');
+        const riceChart = new Chart(riceCtx, {
+            type: 'line',
+            data: {
+                labels: ['জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন'],
+                datasets: [{
+                    label: 'ধান মূল্য (প্রতি কেজি)',
+                    data: [38, 40, 42, 45, 43, 42],
+                    backgroundColor: 'rgba(72, 187, 120, 0.2)',
+                    borderColor: 'rgba(72, 187, 120, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '৳ ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '৳ ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        // Initialize Potato Price Chart
+        const potatoCtx = document.getElementById('potatoChart').getContext('2d');
+        const potatoChart = new Chart(potatoCtx, {
+            type: 'line',
+            data: {
+                labels: ['জানুয়ারী', 'ফেব্রুয়ারী', 'মার্চ', 'এপ্রিল', 'মে', 'জুন'],
+                datasets: [{
+                    label: 'আলু মূল্য (প্রতি কেজি)',
+                    data: [25, 28, 30, 28, 26, 24],
+                    backgroundColor: 'rgba(66, 153, 225, 0.2)',
+                    borderColor: 'rgba(66, 153, 225, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return '৳ ' + context.raw;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '৳ ' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
         // Mobile menu toggle
-        document.querySelector('.md\\:hidden button').addEventListener('click', function() {
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
             document.getElementById('mobileMenu').classList.remove('hidden');
         });
         
@@ -764,9 +955,31 @@
             });
         });
         
-        // Simple product search functionality
-        document.querySelector('#home button.bg-white').addEventListener('click', function() {
-            alert('রেজিস্ট্রেশন পেজ লোড হচ্ছে...');
+        // Registration modal functionality
+        const modal = document.getElementById("registrationModal");
+        const btn = document.getElementById("registerBtn");
+        const span = document.getElementsByClassName("close")[0];
+        
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+        
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
+        // Form submission
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('ধন্যবাদ! আপনার রেজিস্ট্রেশন সফলভাবে জমা হয়েছে। আমরা শীঘ্রই আপনার সাথে যোগাযোগ করব।');
+            modal.style.display = "none";
+            this.reset();
         });
         
         // Product order buttons
